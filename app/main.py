@@ -15,11 +15,23 @@ app = FastAPI(
 )
 
 
+allowed_origins = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+    settings.frontend_url,
+]
+
+# Evita duplicados y valores vacíos
+allowed_origins = list({
+    origin.strip().rstrip("/")
+    for origin in allowed_origins
+    if origin and origin.strip()
+})
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        settings.frontend_url,
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
