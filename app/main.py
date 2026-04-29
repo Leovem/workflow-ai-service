@@ -18,10 +18,10 @@ app = FastAPI(
 allowed_origins = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
+    "https://frontend-workflow-seven.vercel.app",
     settings.frontend_url,
 ]
 
-# Evita duplicados y valores vacíos
 allowed_origins = list({
     origin.strip().rstrip("/")
     for origin in allowed_origins
@@ -36,6 +36,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/debug/cors")
+def debug_cors():
+    return {
+        "frontend_url": settings.frontend_url,
+        "allowed_origins": allowed_origins,
+        "environment": settings.environment,
+    }
 
 
 app.include_router(health_router)
